@@ -11,14 +11,14 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "administrator")
+public class Administrator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Integer administratorId;
 
-    private String userPassword;
-    private String goodsName;
-    private Date userCreate;                  //用户创建时间
+    private String administratorPassword;
+    private String administratorName;
+    private Date gmtCreate;                  //创建时间
 }
