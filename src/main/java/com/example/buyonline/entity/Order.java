@@ -16,7 +16,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderId;
-    private Integer id;
+    private Integer userId;
     private String orderInfo;
     private Double orderValue;                 //总价格
     private Date orderCreate;                  //订单创建时间

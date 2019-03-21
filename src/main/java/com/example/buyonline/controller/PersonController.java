@@ -47,7 +47,7 @@ public class PersonController extends BaseController {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "该用户已禁用");
             }
             Map<String,Object> result = new HashMap<>();
-            result.put("id",person.getId());
+            result.put("id",person.getUserId());
             result.put("tel",person.getTel());
             result.put("name",person.getName());
             result.put("role",person.getRole());
@@ -122,14 +122,14 @@ public class PersonController extends BaseController {
      * @Date: 2019/03/18
      */
     @GetMapping("customerInfo")
-    public MKOResponse customerInfo(@RequestParam Integer id) {
+    public MKOResponse customerInfo(@RequestParam Integer userId) {
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if (person == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "查不到信息");
             }
             Map<String,Object> result = new HashMap<>();
-            result.put("id",person.getId());
+            result.put("id",person.getUserId());
             result.put("tel",person.getTel());
             result.put("name",person.getName());
             result.put("role",person.getRole());
@@ -153,9 +153,9 @@ public class PersonController extends BaseController {
      * @Date: 2019/03/18
      */
     @GetMapping("delete")
-    public MKOResponse delete(@RequestParam Integer id) {
+    public MKOResponse delete(@RequestParam Integer userId) {
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if (person == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "查无数据无需删除");
             }
@@ -178,9 +178,9 @@ public class PersonController extends BaseController {
      */
     @GetMapping("switchState")
     MKOResponse switchState(@RequestParam Integer state,
-                            @RequestParam Integer id){
+                            @RequestParam Integer userId){
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if(person == null){
                 return makeResponse(MKOResponseCode.DataNotFound,"","此[id]无数据");
             }
@@ -244,11 +244,11 @@ public class PersonController extends BaseController {
     @PostMapping("update")
     public MKOResponse update(@RequestBody Person personData) {
         try {
-            if(personData.getId() == null){
+            if(personData.getUserId() == null){
                 return makeResponse(MKOResponseCode.ParamsLack,"","缺少参数[id]");
             }
 
-            Person person = personRepository.chooseById(personData.getId());
+            Person person = personRepository.chooseById(personData.getUserId());
             if(person == null){
                 return makeResponse(MKOResponseCode.DataNotFound,"","此[id]无数据");
             }

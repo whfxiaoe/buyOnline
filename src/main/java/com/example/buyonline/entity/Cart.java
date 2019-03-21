@@ -16,7 +16,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cartId;
-    private Integer id;
+    private Integer userId;
     private Integer goodsId;
     private Integer goodsCount;                //库存总数
     private Integer cartState;                //状态

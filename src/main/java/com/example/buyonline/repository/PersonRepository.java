@@ -12,7 +12,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query(value = "SELECT * FROM person WHERE tel = ?1", nativeQuery = true)
     Person validateTel(String tel);
 
-    @Query(value = "SELECT * FROM person WHERE id = ?1 AND role = 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM person WHERE user_id = ?1 AND role = 0", nativeQuery = true)
     Person chooseById(Integer id);
 
 }

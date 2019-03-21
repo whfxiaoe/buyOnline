@@ -42,13 +42,13 @@ public class OrderController extends BaseController{
      * @Date: 2019/03/18
      */
     @GetMapping("info")
-    public MKOResponse info(@RequestParam Integer id) {
+    public MKOResponse info(@RequestParam Integer userId) {
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if (person == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id用户不存在");
             }
-            Order order = orderRepository.chooseById(id);
+            Order order = orderRepository.chooseById(userId);
             if (order == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id无订单");
             }
@@ -60,7 +60,7 @@ public class OrderController extends BaseController{
                 ls.add(rs);
             }
             result.put("orderId",order.getOrderId());
-            result.put("id",order.getId());
+            result.put("id",order.getUserId());
             result.put("orderValue",order.getOrderValue());
             result.put("orderCreate",order.getOrderCreate());
             result.put("orderState",order.getState());

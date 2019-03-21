@@ -225,7 +225,7 @@ public class GoodsController extends BaseController{
      * @Param:  state(Integer)      goodsId
      * @return:
      * @Author: xiaoe
-     * @Date: 2019/03/08
+     * @Date: 2019/03/18
      */
     @GetMapping("switchState")
     MKOResponse switchState(@RequestParam Integer goodsState,
@@ -254,11 +254,11 @@ public class GoodsController extends BaseController{
      * @Date: 2019/03/19
      */
     @GetMapping("addCart")
-    public MKOResponse addCart(@RequestParam Integer id,
+    public MKOResponse addCart(@RequestParam Integer userId,
                                @RequestParam Integer goodsId,
                                @RequestParam Integer goodsCount) {
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if (person == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id用户不存在");
             }
@@ -267,7 +267,7 @@ public class GoodsController extends BaseController{
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id无商品");
             }
             Cart cart = new Cart();
-            cart.setId(id);
+            cart.setUserId(userId);
             cart.setGoodsId(goodsId);
             cart.setGoodsCount(goodsCount);
             cart.setCartCreate(new Date());
@@ -290,14 +290,14 @@ public class GoodsController extends BaseController{
      * @Date: 2019/03/19
      */
     @GetMapping("clearCart")
-    public MKOResponse clearCart(@RequestParam Integer id) {
+    public MKOResponse clearCart(@RequestParam Integer userId) {
         try {
-            cartRepository.chooseById(id);
+            int i = cartRepository.delById(userId);
 //            if (cart == null) {
 //                return makeResponse(MKOResponseCode.DataNotFound, "", "查无数据无需删除");
 //            }q
 //            cartRepository.delete(cart);
-            return makeSuccessResponse("已清空");
+            return makeSuccessResponse("已清空用户id="+userId+"的"+i+"条数据");
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -313,20 +313,20 @@ public class GoodsController extends BaseController{
      * @Date: 2019/03/19
      */
     @GetMapping("orderCreate")
-    public MKOResponse orderCreate(@RequestParam Integer id,
+    public MKOResponse orderCreate(@RequestParam Integer userId,
                                    @RequestParam Integer goodsId,
                                    @RequestParam Integer goodsCount) {
         try {
-            Person person = personRepository.chooseById(id);
+            Person person = personRepository.chooseById(userId);
             if (person == null) {
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id用户不存在");
             }
-            Goods goods = goodsRepository.chooseById(id);
+            Goods goods = goodsRepository.chooseById(userId);
             if(goods == null){
                 return makeResponse(MKOResponseCode.DataNotFound, "", "此id无商品");
             }
             Order order = new Order();
-            order.setId(id);
+            order.setUserId(userId);
             order.setOrderInfo("["+goods.getGoodsName()+","+goodsCount+","+goods.getGoodsPrice()+"]");
             order.setOrderValue(goods.getGoodsPrice()*goodsCount);
             order.setOrderCreate(new Date());
@@ -350,17 +350,17 @@ public class GoodsController extends BaseController{
      * @Date: 2019/03/19
      */
     @GetMapping("cartCreate")
-    public MKOResponse cartCreate(@RequestParam Integer id) {
+    public MKOResponse cartCreate(@RequestParam Integer userId) {
         try {
 
-            String sel = "SELECT goods.goods_name,shopping_cart.goods_count,goods.goods_price FROM goods,shopping_cart WHERE shopping_cart.id = "+ id;
+            String sel = "SELECT goods.goods_name,shopping_cart.goods_count,goods.goods_price FROM goods,shopping_cart WHERE shopping_cart.id = "+ userId;
             Query queryC = entityManager.createNativeQuery(sel);
             List<Map<String, Object>> lm = ((SQLQuery)queryC.unwrap(SQLQuery.class)).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).getResultList();
 
             Order order = new Order();
             String[] arr = createOrder(lm);                     //调用订单生成方法
 
-            order.setId(id);
+            order.setUserId(userId);
             order.setOrderInfo(arr[0]);
             order.setOrderValue(Double.parseDouble(arr[1]));
             order.setOrderCreate(new Date());
